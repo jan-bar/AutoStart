@@ -37,4 +37,5 @@
 
 ## 使用方法
 1. 执行`.\AutoStart.exe -reg add -c C:\config.json`可以设置开机启动。  
-2. 执行`.\AutoStart.exe -c C:\config.json`可以测试运行结果。
+2. 执行`.\AutoStart.exe -reg del`可以取消开机启动。  
+3. 执行`.\AutoStart.exe -c C:\config.json`可以测试运行结果。
