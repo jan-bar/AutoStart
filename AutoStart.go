@@ -140,6 +140,8 @@ func openConfig(p string) ([]*DelayStart, error) {
 
 func (t *DelayStart) prepare() (err error) {
 	switch t.Mode {
+	default:
+		return fmt.Errorf("%d mode error", t.Mode)
 	case noneMode:
 		var name string
 		if t.Name != "" {
@@ -161,7 +163,7 @@ func (t *DelayStart) prepare() (err error) {
 		t.cmd.Env = os.Environ()
 		for _, v := range t.Env {
 			if strings.Count(v, "=") == 1 {
-				t.cmd.Env = append(t.cmd.Env, v) // 新增环境变量
+				t.cmd.Env = append(t.cmd.Env, strings.TrimSpace(v)) // 新增环境变量
 			}
 		}
 
