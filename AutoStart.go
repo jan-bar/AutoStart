@@ -171,35 +171,23 @@ func (t *DelayStart) prepare() (err error) {
 			t.cmd.Dir = t.Dir // 起始路径
 		}
 
-		if IsFilePathExists(t.Stdin, true) == nil {
-			t.cmd.Stdin, err = os.Open(t.Stdin)
-			if err != nil {
-				return
-			}
-		} else { // 输入不是文件则作为字符串输入
+		t.cmd.Stdin, err = os.Open(t.Stdin)
+		if err != nil { /* 读取文件错误,则按照字符串读取 */
 			t.cmd.Stdin = strings.NewReader(t.Stdin)
 		}
 
-		if IsFilePathExists(t.Stdout, true) == nil {
-			t.cmd.Stdout, err = os.Open(t.Stdout)
-			if err != nil {
-				return
-			}
-		} else { // 重定向标准输出
+		t.cmd.Stdout, err = os.OpenFile(t.Stdout, os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
 			t.cmd.Stdout = os.Stdout
 		}
 
-		if IsFilePathExists(t.Stderr, true) == nil {
-			if t.Stdout == t.Stderr { // 标准输出和标准错误一样
-				t.cmd.Stderr = t.cmd.Stdout
-			} else {
-				t.cmd.Stderr, err = os.Open(t.Stderr)
-				if err != nil {
-					return
-				}
+		if t.Stdout == t.Stderr { // 标准输出和标准错误一样
+			t.cmd.Stderr = t.cmd.Stdout
+		} else {
+			t.cmd.Stderr, err = os.OpenFile(t.Stderr, os.O_CREATE|os.O_APPEND, 0666)
+			if err != nil {
+				t.cmd.Stderr = os.Stderr
 			}
-		} else { // 重定向标准错误
-			t.cmd.Stderr = os.Stderr
 		}
 	case lsrunaseMode:
 		if t.User == "" {
