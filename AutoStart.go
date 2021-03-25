@@ -229,7 +229,7 @@ func (t *DelayStart) prepare() (err error) {
 		t.Wait = true // 该方式需要等待
 	}
 	t.delay = time.Second * time.Duration(t.Delay)
-	return
+	return nil
 }
 
 func (t *DelayStart) run(wg *sync.WaitGroup) {
