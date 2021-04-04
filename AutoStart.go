@@ -60,7 +60,14 @@ Example DelayStart.json:
 	}
 	flag.Parse()
 
-	err := checkLsRunAs()
+	fw, err := os.Create("DelayStart.log")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer fw.Close()
+
+	log.SetOutput(fw)
+	err = checkLsRunAs()
 	if err != nil {
 		log.Fatal(err)
 	}
